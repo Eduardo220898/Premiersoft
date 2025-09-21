@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthShield - Plataforma de Gestão Hospitalar</title>
+    <meta name="description"
+        content="Plataforma inteligente para consolidação e gestão de dados hospitalares, otimizando a alocação de médicos e melhorando o atendimento aos pacientes.">
+    <meta name="keywords" content="sistema hospitalar, alocação médicos, gestão saúde, APS, dashboard médico">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #00152a;">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fas fa-hospital-alt me-2"></i>
+                <strong>HealthShield</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home"
+                            style="color: rgba(255, 255, 255, 0.8); transition: all 0.3s ease-in-out;"
+                            onmouseover="this.style.color='rgba(255, 255, 255, 1)'; this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.color='rgba(255, 255, 255, 0.8)'; this.style.transform='translateY(0)'">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about"
+                            style="color: rgba(255, 255, 255, 0.8); transition: all 0.3s ease-in-out;"
+                            onmouseover="this.style.color='rgba(255, 255, 255, 1)'; this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.color='rgba(255, 255, 255, 0.8)'; this.style.transform='translateY(0)'">Sobre</a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light ms-2 px-3" href="login.html"
+                            style="transition: all 0.3s ease-in-out;">
+                            <i class="fas fa-sign-in-alt me-1"></i>Entrar
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-particles"></div>
+        <div class="container">
+            <div class="row align-items-center min-vh-100 pt-5">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="800">
+                    <div class="hero-content">
+                        <h1 class="display-3 fw-bold text-white mb-4">
+                            O Futuro da
+                            <span class="text-gradient">Gestão Hospitalar</span>
+                            está aqui
+                        </h1>
+                        <p class="lead text-white-75 mb-4">
+                            Revolucione a alocação de profissionais de saúde com nossa plataforma
+                            de IA que integra dados de múltiplos formatos e otimiza recursos hospitalares
+                            em tempo real.
+                        </p>
+                        <div class="hero-button">
+                            <a href="login.html" class="btn btn-hero-primary btn-lg me-3">
+                                <i class="fas fa-rocket me-2"></i>Começar Agora
+                            </a>
+
+                        </div>
+                        <div class="hero-trust mt-4">
+                            <small class="text-white-50">Confiado por mais de 150 hospitais em todo o Brasil</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+                    <div class="hero-visual">
+                        <div class="dashboard-mockup">
+                            <div class="mockup-header">
+                                <div class="mockup-dots">
+                                    <span></span><span></span><span></span>
+                                </div>
+                                <div class="mockup-title">Dashboard APS</div>
+                            </div>
+                            <div class="mockup-content">
+                                <div class="mockup-chart">
+                                    <div class="chart-bars">
+                                        <div class="bar" style="height: 60%"></div>
+                                        <div class="bar" style="height: 80%"></div>
+                                        <div class="bar" style="height: 45%"></div>
+                                        <div class="bar" style="height: 90%"></div>
+                                        <div class="bar" style="height: 70%"></div>
+                                    </div>
+                                </div>
+                                <div class="mockup-cards">
+                                    <div class="mini-card bg-primary">
+                                        <i class="fas fa-hospital"></i>
+                                        <span>156 Hospitais</span>
+                                    </div>
+                                    <div class="mini-card bg-success">
+                                        <i class="fas fa-user-md"></i>
+                                        <span>2.847 Médicos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="floating-elements">
+                            <div class="floating-card card-1">
+                                <i class="fas fa-heartbeat text-danger"></i>
+                                <div>
+                                    <strong>95%</strong>
+                                    <small>Eficiência</small>
+                                </div>
+                            </div>
+                            <div class="floating-card card-2">
+                                <i class="fas fa-clock text-warning"></i>
+                                <div>
+                                    <strong>24/7</strong>
+                                    <small>Disponível</small>
+                                </div>
+                            </div>
+                            <div class="floating-card card-3">
+                                <i class="fas fa-shield-alt text-success"></i>
+                                <div>
+                                    <strong>100%</strong>
+                                    <small>Seguro</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="section-title">Sobre o Sistema HealthShield</h2>
+                    <p class="lead mb-4" style="color: #00152a;">
+                        O Sistema HealthShield foi desenvolvido para modernizar e centralizar a gestão
+                        de dados hospitalares, facilitando a alocação eficiente de profissionais
+                        de saúde em diferentes unidades hospitalares.
+                    </p>
+                </div>
+            </div>
+            <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon bg-primary">
+                            <i class="fas fa-database text-white"></i>
+                        </div>
+                        <h4>Consolidação de Dados</h4>
+                        <p style="color: #00152a;">
+                            Integra dados de múltiplos formatos: Excel, XML, JSON, HL7 e FHIR,
+                            criando uma base unificada e normalizada.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon bg-success">
+                            <i class="fas fa-user-md text-white"></i>
+                        </div>
+                        <h4>Alocação Inteligente</h4>
+                        <p style="color: #00152a;">
+                            Algoritmos avançados para alocar médicos considerando especialidades,
+                            proximidade geográfica e disponibilidade.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon bg-info">
+                            <i class="fas fa-chart-bar text-white"></i>
+                        </div>
+                        <h4>Dashboard Intuitivo</h4>
+                        <p style="color: #00152a;">
+                            Interface simples e amigável, projetada especialmente para
+                            profissionais de saúde sem conhecimento técnico.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Processing Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4" data-aos="fade-right">
+                    <div class="section-badge">Processamento de Dados</div>
+                    <h2 class="section-title">Múltiplos Formatos, Uma Solução</h2>
+                    <p class="lead text-muted mb-4">
+                        Nossa plataforma processa dados de qualquer fonte hospitalar,
+                        normalizando e consolidando informações em tempo real.
+                    </p>
+
+                    <div class="data-formats">
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-file-excel text-success"></i>
+                            </div>
+                            <div class="format-info">
+                                <h6>Excel & CSV</h6>
+                                <small class="text-muted">Planilhas tradicionais</small>
+                            </div>
+                        </div>
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-code text-primary"></i>
+                            </div>
+                            <div class="format-info">
+                                <h6>HL7 & FHIR</h6>
+                                <small class="text-muted">Padrões internacionais</small>
+                            </div>
+                        </div>
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-file-code text-warning"></i>
+                            </div>
+                            <div class="format-info">
+                                <h6>XML & JSON</h6>
+                                <small class="text-muted">Formatos estruturados</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#demo" class="btn btn-primary btn-lg mt-4">
+                        <i class="fas fa-play me-2"></i>Ver Demonstração
+                    </a>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="data-flow-visual">
+                        <div class="flow-container">
+                            <div class="flow-input">
+                                <div class="input-file">
+                                    <i class="fas fa-file-csv"></i>
+                                    <span>CSV</span>
+                                </div>
+                                <div class="input-file">
+                                    <i class="fas fa-file-code"></i>
+                                    <span>JSON</span>
+                                </div>
+                                <div class="input-file">
+                                    <i class="fas fa-code"></i>
+                                    <span>XML</span>
+                                </div>
+                            </div>
+                            <div class="flow-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="flow-processor">
+                                <div class="processor-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <span>APS Engine</span>
+                            </div>
+                            <div class="flow-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="flow-output">
+                                <div class="output-dashboard">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <span>Dashboard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-5 text-white" style="background-color: #00152a;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up">
+                    <div class="section-badge-dark">Demonstração Interativa</div>
+                    <h2 class="section-title text-white">Veja o APS em Ação</h2>
+                    <p class="lead text-white-75">
+                        Experimente nossa plataforma com dados reais e descubra como podemos
+                        transformar a gestão do seu hospital
+                    </p>
+                </div>
+            </div>
+            <div class="row align-items-stretch">
+                <div class="col-lg-6 mb-4" data-aos="fade-right">
+                    <div class="demo-video-container h-100">
+                        <div class="video-placeholder h-100">
+                            <div class="play-button" id="demo-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-overlay">
+                                <h5>Dashboard em Tempo Real</h5>
+                                <p>Veja como funciona na prática</p>
+                            </div>
+                        </div>
+                        <div class="video-controls">
+                            <button class="btn btn-outline-light btn-sm me-2">
+                                <i class="fas fa-eye me-1"></i>Preview
+                            </button>
+                            <button class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-fullscreen me-1"></i>Tela Cheia
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="demo-features">
+                        <h3 class="mb-4">O que você verá na demo:</h3>
+                        <div class="demo-feature-item">
+                            <div class="demo-icon">
+                                <i class="fas fa-upload"></i>
+                            </div>
+                            <div>
+                                <h6>Importação de Dados</h6>
+                                <p class="text-white-75">Upload e processamento automático de arquivos hospitalares</p>
+                            </div>
+                        </div>
+                        <div class="demo-feature-item">
+                            <div class="demo-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h6>Análise em Tempo Real</h6>
+                                <p class="text-white-75">Visualização de métricas e estatísticas atualizadas</p>
+                            </div>
+                        </div>
+                        <div class="demo-feature-item">
+                            <div class="demo-icon">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                            <div>
+                                <h6>Alocação Inteligente</h6>
+                                <p class="text-white-75">Sistema de recomendação para distribuição de médicos</p>
+                            </div>
+                        </div>
+
+                        <div class="demo-cta mt-4">
+                            <a href="login.html" class="btn btn-warning btn-lg me-3">
+                                <i class="fas fa-rocket me-2"></i>Testar Agora
+                            </a>
+                            <a href="#contact" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-calendar me-2"></i>Agendar Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-gradient-primary text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <h2 class="display-5 fw-bold mb-3">
+                        Pronto para Transformar seu Hospital?
+                    </h2>
+                    <p class="lead mb-4">
+                        Junte-se aos mais de 150 hospitais que já revolucionaram
+                        sua gestão com o Sistema APS. Comece gratuitamente hoje!
+                    </p>
+                    <div class="cta-features">
+                        <div class="cta-feature">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span>Setup em menos de 24 horas</span>
+                        </div>
+                        <div class="cta-feature">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span>Suporte técnico especializado</span>
+                        </div>
+                        <div class="cta-feature">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span>30 dias de teste gratuito</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center" data-aos="fade-left">
+                    <div class="cta-buttons">
+                        <a href="login.html" class="btn btn-warning btn-lg btn-block mb-3">
+                            <i class="fas fa-rocket me-2"></i>
+                            Começar Gratuitamente
+                        </a>
+                        <a href="#contact" class="btn btn-outline-light btn-lg btn-block">
+                            <i class="fas fa-phone me-2"></i>
+                            Falar com Especialista
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-white py-4" style="background: linear-gradient(135deg, #00152a, #002a54);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">
+                        &copy; 2025 Sistema APS. Todos os direitos reservados.
+                    </p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-white me-3" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white me-3" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="text-white" title="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Demo video functionality
+        document.getElementById('demo-play-btn')?.addEventListener('click', function () {
+            // Implementar reprodução de vídeo ou redirecionar para demo
+            window.open('dashboard.html', '_blank');
+        });
+
+        // Contact form
+        document.getElementById('contact-form')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                // Simular envio
+                alert('Obrigado! Entraremos em contato em breve.');
+                this.reset();
+                this.classList.remove('was-validated');
+            }
+            this.classList.add('was-validated');
+        });
+    </script>
+</body>
+
+</html>

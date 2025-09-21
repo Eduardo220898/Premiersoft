@@ -1,0 +1,103 @@
+# Docker Compose para Produção
+version: '3.8'
+
+services:
+  # Base de dados PostgreSQL
+  postgresql:
+    image: postgres:15-alpine
+    container_name: aps-postgresql-prod
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-aps_saude}
+      - POSTGRES_USER=${POSTGRES_USER:-aps}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-aps123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aps} -d ${POSTGRES_DB:-aps_saude}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aps-network
+    restart: unless-stopped
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: aps-redis-prod
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-aps123}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aps-network
+    restart: unless-stopped
+
+  # Message Broker RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: aps-rabbitmq-prod
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-aps}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-aps123}
+      - RABBITMQ_DEFAULT_VHOST=aps_vhost
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aps-network
+    restart: unless-stopped
+
+  # Aplicação Web
+  aps-web:
+    image: ${DOCKER_REGISTRY:-premieresoft}/aps-web:${TAG:-latest}
+    container_name: aps-web-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+    depends_on:
+      - postgresql
+      - redis
+      - rabbitmq
+    networks:
+      - aps-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
+networks:
+  aps-network:
+    driver: bridge

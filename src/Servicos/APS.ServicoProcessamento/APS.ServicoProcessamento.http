@@ -1,0 +1,6 @@
+@APS.ServicoProcessamento_HostAddress = http://localhost:5091
+
+GET {{APS.ServicoProcessamento_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

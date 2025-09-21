@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema APS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-hospital-alt me-2"></i>
+                <span class="brand-text">APS</span>
+            </div>
+            <button class="sidebar-toggle d-lg-none" id="sidebar-toggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-user">
+            <div class="user-avatar">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="user-name">Dr. João Silva</div>
+                <div class="user-role" id="user-role">Cardiologia</div>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active">
+                <a href="#dashboard" class="menu-link" data-section="dashboard">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#hospitals" class="menu-link" data-section="hospitals">
+                    <i class="fas fa-hospital"></i>
+                    <span>Hospitais</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#doctors" class="menu-link" data-section="doctors">
+                    <i class="fas fa-user-md"></i>
+                    <span>Médicos</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#patients" class="menu-link" data-section="patients">
+                    <i class="fas fa-users"></i>
+                    <span>Pacientes</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#allocations" class="menu-link" data-section="allocations">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Alocações</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#imports" class="menu-link" data-section="imports">
+                    <i class="fas fa-file-import"></i>
+                    <span>Importações</span>
+                </a>
+            </li>
+            <li class="menu-divider"></li>
+            <li class="menu-item">
+                <a href="#settings" class="menu-link" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#" class="menu-link" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="sidebar-toggle d-lg-none" id="mobile-sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title" id="page-title">Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="header-search">
+                    <input type="text" class="form-control" placeholder="Buscar..." id="global-search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-notifications">
+                    <button class="notification-btn" data-bs-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <ul class="dropdown-menu notification-dropdown">
+                        <li class="dropdown-header">Notificações</li>
+                        <li><a class="dropdown-item" href="#">Nova alocação disponível</a></li>
+                        <li><a class="dropdown-item" href="#">Dados importados com sucesso</a></li>
+                        <li><a class="dropdown-item" href="#">Paciente transferido</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
+                    </ul>
+                </div>
+                <div class="header-user">
+                    <button class="user-btn" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu user-dropdown">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="header-logout"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="container-fluid">
+                    <!-- Healthcare Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-lg-2 col-md-4 mb-3">
+                            <div class="stat-card stat-card-primary">
+                                <div class="stat-icon">
+                                    <i class="fas fa-hospital"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number" id="total-hospitals">6,845</div>
+                                    <div class="stat-label">Hospitais</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 mb-3">
+                            <div class="stat-card stat-card-success">
+                                <div class="stat-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number" id="total-doctors">280,002</div>
+                                    <div class="stat-label">Médicos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 mb-3">
+                            <div class="stat-card stat-card-info">
+                                <div class="stat-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number" id="total-municipalities">5,571</div>
+                                    <div class="stat-label">Municípios</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 mb-3">
+                            <div class="stat-card stat-card-warning">
+                                <div class="stat-icon">
+                                    <i class="fas fa-flag"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number" id="total-states">27</div>
+                                    <div class="stat-label">Estados</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 mb-3">
+                            <div class="stat-card stat-card-danger">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number" id="total-patients">-</div>
+                                    <div class="stat-label">Pacientes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 mb-3">
+                            <div class="stat-card stat-card-secondary">
+                                <div class="stat-icon">
+                                    <i class="fas fa-file-import"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-number" id="processed-files">0</div>
+                                    <div class="stat-label">Importações</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Healthcare Data Processing Status -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h5><i class="fas fa-heartbeat me-2"></i>Status do Processamento de Dados de Saúde</h5>
+                                    <div class="chart-controls">
+                                        <button class="btn btn-sm btn-outline-primary" id="refresh-status">
+                                            <i class="fas fa-sync-alt"></i> Atualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="chart-body">
+                                    <div id="processing-status">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Sistema pronto para processar dados de saúde. Faça upload de arquivos na seção "Importações".
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-lg-8 mb-3">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h5>Alocações por Mês</h5>
+                                    <div class="chart-controls">
+                                        <select class="form-select form-select-sm">
+                                            <option>2025</option>
+                                            <option>2024</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="chart-content">
+                                    <canvas id="allocationsChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-3">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h5>Especialidades</h5>
+                                </div>
+                                <div class="chart-content">
+                                    <canvas id="specialtiesChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="row">
+                        <div class="col-lg-8 mb-3">
+                            <div class="activity-card">
+                                <div class="card-header">
+                                    <h5>Atividades Recentes</h5>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                                </div>
+                                <div class="activity-list" id="recent-activities">
+                                    <!-- Activities will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-3">
+                            <div class="quick-actions-card">
+                                <div class="card-header">
+                                    <h5>Ações Rápidas</h5>
+                                </div>
+                                <div class="quick-actions">
+                                    <button class="quick-action-btn" data-action="import">
+                                        <i class="fas fa-file-import"></i>
+                                        <span>Importar Dados</span>
+                                    </button>
+                                    <button class="quick-action-btn" data-action="allocate">
+                                        <i class="fas fa-plus-circle"></i>
+                                        <span>Nova Alocação</span>
+                                    </button>
+                                    <button class="quick-action-btn" data-action="report">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Gerar Relatório</span>
+                                    </button>
+                                    <button class="quick-action-btn" data-action="search">
+                                        <i class="fas fa-search"></i>
+                                        <span>Busca Avançada</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hospitals Section -->
+            <section id="hospitals-section" class="content-section">
+                <div class="container-fluid">
+                    <div class="section-header">
+                        <h2>Hospitais</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline-primary me-2">
+                                <i class="fas fa-download me-1"></i>Exportar
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Novo Hospital
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table-card">
+                        <div class="table-filters mb-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" placeholder="Buscar hospital..." id="hospital-search">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="hospital-city-filter">
+                                        <option value="">Todas as cidades</option>
+                                        <option value="São Paulo">São Paulo</option>
+                                        <option value="Rio de Janeiro">Rio de Janeiro</option>
+                                        <option value="Belo Horizonte">Belo Horizonte</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="hospital-type-filter">
+                                        <option value="">Todos os tipos</option>
+                                        <option value="Público">Público</option>
+                                        <option value="Privado">Privado</option>
+                                        <option value="Filantrópico">Filantrópico</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-outline-secondary w-100" id="clear-hospital-filters">
+                                        <i class="fas fa-times me-1"></i>Limpar Filtros
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="hospitals-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Cidade</th>
+                                        <th>Tipo</th>
+                                        <th>Médicos</th>
+                                        <th>Pacientes</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections will be similar structure -->
+            <section id="doctors-section" class="content-section">
+                <div class="container-fluid">
+                    <h2>Médicos</h2>
+                    <p class="text-muted">Seção em desenvolvimento...</p>
+                </div>
+            </section>
+
+            <section id="patients-section" class="content-section">
+                <div class="container-fluid">
+                    <h2>Pacientes</h2>
+                    <p class="text-muted">Seção em desenvolvimento...</p>
+                </div>
+            </section>
+
+            <section id="allocations-section" class="content-section">
+                <div class="container-fluid">
+                    <h2>Alocações</h2>
+                    <p class="text-muted">Seção em desenvolvimento...</p>
+                </div>
+            </section>
+
+            <section id="imports-section" class="content-section">
+                <div class="container-fluid">
+                    <div class="section-header">
+                        <h2>Importações de Dados</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#importHistoryModal">
+                                <i class="fas fa-history me-1"></i>Histórico
+                            </button>
+                            <button class="btn btn-outline-secondary me-2" id="clear-queue-btn">
+                                <i class="fas fa-trash me-1"></i>Limpar Fila
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Area -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="upload-card">
+                                <div class="upload-header">
+                                    <h5><i class="fas fa-cloud-upload-alt me-2"></i>Upload de Dados de Saúde</h5>
+                                    <p class="text-muted mb-0">Formatos suportados: CSV, XML, JSON (médicos, hospitais, municípios, estados, pacientes)</p>
+                                </div>
+                                
+                                <div class="upload-area" id="upload-area">
+                                    <div class="upload-dropzone" id="dropzone">
+                                        <div class="dropzone-content">
+                                            <i class="fas fa-hospital upload-icon"></i>
+                                            <h6>Arraste os arquivos de dados de saúde aqui ou clique para selecionar</h6>
+                                            <p class="text-muted">Suporte para dados de médicos, hospitais, municípios, estados e pacientes</p>
+                                            <input type="file" id="file-input" multiple accept=".csv,.xml,.json,.txt" style="display: none;">
+                                            <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                                                <i class="fas fa-folder-open me-1"></i>Selecionar Arquivos de Saúde
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Healthcare Data Format Info -->
+                                <div class="format-info mt-3">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="format-card">
+                                                <div class="format-icon csv">
+                                                    <i class="fas fa-user-md"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>Médicos</h6>
+                                                    <small>medicos.csv</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="format-card">
+                                                <div class="format-icon json">
+                                                    <i class="fas fa-hospital"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>Hospitais</h6>
+                                                    <small>hospitais.csv</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="format-card">
+                                                <div class="format-icon xml">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>Municípios</h6>
+                                                    <small>municipios.csv</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="format-card">
+                                                <div class="format-icon hl7">
+                                                    <i class="fas fa-flag"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>Estados</h6>
+                                                    <small>estados.csv</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="format-card">
+                                                <div class="format-icon fhir">
+                                                    <i class="fas fa-users"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>Pacientes</h6>
+                                                    <small>pacientes.xml</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="format-card">
+                                                <div class="format-icon generic">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>Genérico</h6>
+                                                    <small>outros formatos</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>JSON</h6>
+                                                    <small>JavaScript Object</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="format-card">
+                                                <div class="format-icon hl7">
+                                                    <i class="fas fa-hospital"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>HL7</h6>
+                                                    <small>Health Level 7</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="format-card">
+                                                <div class="format-icon fhir">
+                                                    <i class="fas fa-fire"></i>
+                                                </div>
+                                                <div class="format-details">
+                                                    <h6>FHIR</h6>
+                                                    <small>Fast Healthcare</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Queue with Advanced Validation -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="queue-card">
+                                <div class="queue-header">
+                                    <h5><i class="fas fa-list me-2"></i>Fila de Processamento com Validação</h5>
+                                    <div class="queue-stats">
+                                        <span class="badge bg-info me-2">
+                                            <i class="fas fa-clock me-1"></i>
+                                            <span id="queue-pending">0</span> Pendentes
+                                        </span>
+                                        <span class="badge bg-warning me-2">
+                                            <i class="fas fa-spinner me-1"></i>
+                                            <span id="queue-processing">0</span> Processando
+                                        </span>
+                                        <span class="badge bg-success me-2">
+                                            <i class="fas fa-check me-1"></i>
+                                            <span id="queue-completed">0</span> Concluídos
+                                        </span>
+                                        <span class="badge bg-danger me-2">
+                                            <i class="fas fa-shield-alt me-1"></i>
+                                            <span id="queue-quarantined">0</span> Quarentena
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Validation Options -->
+                                <div class="validation-options mb-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="strict-mode" checked>
+                                                <label class="form-check-label" for="strict-mode">
+                                                    <i class="fas fa-shield-alt text-warning me-1"></i>
+                                                    Modo Rigoroso
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="deep-scan" checked>
+                                                <label class="form-check-label" for="deep-scan">
+                                                    <i class="fas fa-search text-info me-1"></i>
+                                                    Análise Profunda
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="auto-normalize" checked>
+                                                <label class="form-check-label" for="auto-normalize">
+                                                    <i class="fas fa-magic text-success me-1"></i>
+                                                    Auto-Normalização
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="allow-quarantine" checked>
+                                                <label class="form-check-label" for="allow-quarantine">
+                                                    <i class="fas fa-pause text-warning me-1"></i>
+                                                    Permitir Quarentena
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="upload-queue" id="upload-queue">
+                                    <div class="empty-queue text-center py-4">
+                                        <i class="fas fa-inbox text-muted"></i>
+                                        <p class="text-muted mt-2">Nenhum arquivo na fila</p>
+                                        <small class="text-muted">Arquivos serão validados automaticamente antes do processamento</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processing Results with Validation Info -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="results-card">
+                                <div class="results-header">
+                                    <h5><i class="fas fa-chart-bar me-2"></i>Resultados do Processamento & Validação</h5>
+                                    <div class="results-actions">
+                                        <button class="btn btn-sm btn-outline-warning me-2" id="view-quarantine">
+                                            <i class="fas fa-shield-alt me-1"></i>Ver Quarentena
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info me-2" id="validation-history">
+                                            <i class="fas fa-file-check me-1"></i>Histórico de Validação
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-primary" id="refresh-results">
+                                            <i class="fas fa-sync-alt me-1"></i>Atualizar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="results-content">
+                                    <!-- Statistics Row -->
+                                    <div class="row mb-4" id="processing-stats">
+                                        <div class="col-md-2">
+                                            <div class="stat-item">
+                                                <div class="stat-value" id="total-records">0</div>
+                                                <div class="stat-label">Total de Registros</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="stat-item">
+                                                <div class="stat-value" id="new-patients">0</div>
+                                                <div class="stat-label">Novos Pacientes</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="stat-item">
+                                                <div class="stat-value" id="new-doctors">0</div>
+                                                <div class="stat-label">Novos Médicos</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="stat-item">
+                                                <div class="stat-value text-warning" id="duplicates-found">0</div>
+                                                <div class="stat-label">Duplicatas Encontradas</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="stat-item">
+                                                <div class="stat-value text-success" id="files-normalized">0</div>
+                                                <div class="stat-label">Arquivos Normalizados</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="stat-item">
+                                                <div class="stat-value text-danger" id="corruption-fixes">0</div>
+                                                <div class="stat-label">Correções Aplicadas</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Validation Summary -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="validation-summary-card">
+                                                <h6><i class="fas fa-shield-check text-success me-2"></i>Resumo de Segurança</h6>
+                                                <div class="security-metrics">
+                                                    <div class="security-item">
+                                                        <span class="metric-label">Risco Baixo:</span>
+                                                        <span class="metric-value text-success" id="low-risk-files">0</span>
+                                                    </div>
+                                                    <div class="security-item">
+                                                        <span class="metric-label">Risco Médio:</span>
+                                                        <span class="metric-value text-warning" id="medium-risk-files">0</span>
+                                                    </div>
+                                                    <div class="security-item">
+                                                        <span class="metric-label">Risco Alto:</span>
+                                                        <span class="metric-value text-danger" id="high-risk-files">0</span>
+                                                    </div>
+                                                    <div class="security-item">
+                                                        <span class="metric-label">Ameaças Neutralizadas:</span>
+                                                        <span class="metric-value text-info" id="threats-neutralized">0</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="data-quality-card">
+                                                <h6><i class="fas fa-chart-line text-info me-2"></i>Qualidade dos Dados</h6>
+                                                <div class="quality-metrics">
+                                                    <div class="quality-item">
+                                                        <span class="metric-label">Score Médio:</span>
+                                                        <span class="metric-value" id="avg-quality-score">0%</span>
+                                                    </div>
+                                                    <div class="quality-item">
+                                                        <span class="metric-label">Campos Faltantes:</span>
+                                                        <span class="metric-value text-warning" id="missing-fields">0</span>
+                                                    </div>
+                                                    <div class="quality-item">
+                                                        <span class="metric-label">Formatos Corrigidos:</span>
+                                                        <span class="metric-value text-success" id="format-fixes">0</span>
+                                                    </div>
+                                                    <div class="quality-item">
+                                                        <span class="metric-label">Encoding Corrigido:</span>
+                                                        <span class="metric-value text-info" id="encoding-fixes">0</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings-section" class="content-section">
+                <div class="container-fluid">
+                    <h2>Configurações</h2>
+                    <p class="text-muted">Seção em desenvolvimento...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Import History Modal -->
+    <div class="modal fade" id="importHistoryModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-history me-2"></i>Histórico de Importações
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="import-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Arquivo</th>
+                                    <th>Formato</th>
+                                    <th>Registros</th>
+                                    <th>Status</th>
+                                    <th>Duplicatas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-outline-danger" id="clear-history">
+                        <i class="fas fa-trash me-1"></i>Limpar Histórico
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Duplicate Resolution Modal -->
+    <div class="modal fade" id="duplicateModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                        Duplicatas Encontradas
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Foram encontradas duplicatas durante a importação. 
+                        Escolha como proceder com cada conflito:
+                    </div>
+                    
+                    <div class="duplicate-resolution" id="duplicate-list">
+                        <!-- Duplicate items will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" id="skip-duplicates">
+                        <i class="fas fa-forward me-1"></i>Pular Duplicatas
+                    </button>
+                    <button type="button" class="btn btn-success" id="resolve-duplicates">
+                        <i class="fas fa-check me-1"></i>Aplicar Resoluções
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Processing Details Modal -->
+    <div class="modal fade" id="processingModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-cogs me-2"></i>Detalhes do Processamento
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="processing-info" id="processing-details">
+                        <!-- Processing details will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Real Healthcare Processing Scripts -->
+    <script src="js/file-normalizer.js"></script>
+    <script src="js/file-validation-service.js"></script>
+    <script src="js/api-mock.js"></script>
+    <script src="js/advanced-upload-handler.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Initialize the advanced upload system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup file upload with advanced validation
+            const fileInput = document.getElementById('file-input');
+            const dropzone = document.getElementById('dropzone');
+            const uploadArea = document.getElementById('upload-area');
+
+            // Configure upload options
+            uploadHandler.config.endpoints = {
+                upload: '/api/files/upload',
+                validate: '/api/files/validate', 
+                process: '/api/files/process',
+                status: '/api/files/status'
+            };
+
+            // Update queue stats periodically
+            setInterval(() => {
+                const status = uploadHandler.getQueueStatus();
+                document.getElementById('queue-pending').textContent = status.queued;
+                document.getElementById('queue-processing').textContent = status.active;
+                
+                // Update completed/quarantined from validation history
+                const history = uploadHandler.validationService.getValidationHistory();
+                const completed = history.filter(h => h.status === 'passed').length;
+                const quarantined = uploadHandler.validationService.getQuarantineQueue().length;
+                
+                document.getElementById('queue-completed').textContent = completed;
+                document.getElementById('queue-quarantined').textContent = quarantined;
+            }, 1000);
+
+            // Setup validation option handlers
+            document.getElementById('strict-mode').addEventListener('change', function() {
+                uploadHandler.config.strictMode = this.checked;
+            });
+
+            document.getElementById('deep-scan').addEventListener('change', function() {
+                uploadHandler.config.performDeepScan = this.checked;
+            });
+
+            document.getElementById('auto-normalize').addEventListener('change', function() {
+                uploadHandler.config.autoNormalize = this.checked;
+            });
+
+            document.getElementById('allow-quarantine').addEventListener('change', function() {
+                uploadHandler.config.allowQuarantine = this.checked;
+            });
+
+            // Setup action button handlers
+            document.getElementById('clear-queue-btn').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja limpar toda a fila de upload?')) {
+                    uploadHandler.clearQueue();
+                }
+            });
+
+            document.getElementById('view-quarantine').addEventListener('click', function() {
+                showQuarantineModal();
+            });
+
+            document.getElementById('validation-history').addEventListener('click', function() {
+                showValidationHistoryModal();
+            });
+
+            document.getElementById('refresh-results').addEventListener('click', function() {
+                updateProcessingStats();
+            });
+
+            // Initialize with current stats
+            updateProcessingStats();
+        });
+
+        function showQuarantineModal() {
+            const quarantineQueue = uploadHandler.validationService.getQuarantineQueue();
+            
+            const modal = uploadHandler.createModal('Arquivos em Quarentena', `
+                <div class="alert alert-warning">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    <strong>${quarantineQueue.length}</strong> arquivo(s) em quarentena devido a problemas de segurança.
+                </div>
+                
+                ${quarantineQueue.length > 0 ? `
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Arquivo</th>
+                                    <th>Motivo</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${quarantineQueue.map(item => `
+                                    <tr>
+                                        <td>${item.file.name}</td>
+                                        <td><small class="text-danger">${item.reason}</small></td>
+                                        <td><small>${new Date(item.timestamp).toLocaleString()}</small></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning" onclick="uploadHandler.forceUpload('${item.validationId}')">
+                                                Forçar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                ` : '<p class="text-muted">Nenhum arquivo em quarentena.</p>'}
+            `, [
+                {
+                    text: 'Limpar Quarentena',
+                    class: 'btn-outline-danger',
+                    action: () => {
+                        uploadHandler.validationService.clearQuarantineQueue();
+                        updateProcessingStats();
+                    }
+                },
+                {
+                    text: 'Fechar',
+                    class: 'btn-secondary'
+                }
+            ]);
+            
+            modal.show();
+        }
+
+        function showValidationHistoryModal() {
+            const history = uploadHandler.validationService.getValidationHistory(20);
+            
+            const modal = uploadHandler.createModal('Histórico de Validação', `
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Arquivo</th>
+                                <th>Status</th>
+                                <th>Tempo de Processamento</th>
+                                <th>Data</th>
+                                <th>ID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${history.map(item => `
+                                <tr>
+                                    <td>${item.filename}</td>
+                                    <td>
+                                        <span class="badge bg-${item.status === 'passed' ? 'success' : item.status === 'warning' ? 'warning' : 'danger'}">
+                                            ${item.status}
+                                        </span>
+                                    </td>
+                                    <td><small>${item.processingTime}ms</small></td>
+                                    <td><small>${new Date(item.timestamp).toLocaleString()}</small></td>
+                                    <td><small class="text-muted">${item.validationId}</small></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `, [
+                {
+                    text: 'Fechar',
+                    class: 'btn-secondary'
+                }
+            ]);
+            
+            modal.show();
+        }
+
+        function updateProcessingStats() {
+            // Get validation statistics
+            const history = uploadHandler.validationService.getValidationHistory(100);
+            const quarantine = uploadHandler.validationService.getQuarantineQueue();
+            
+            // Update validation metrics
+            const lowRisk = history.filter(h => h.status === 'passed').length;
+            const mediumRisk = history.filter(h => h.status === 'warning').length;
+            const highRisk = history.filter(h => h.status === 'failed').length;
+            
+            document.getElementById('files-normalized').textContent = history.length;
+            document.getElementById('low-risk-files').textContent = lowRisk;
+            document.getElementById('medium-risk-files').textContent = mediumRisk;
+            document.getElementById('high-risk-files').textContent = highRisk;
+            
+            // Simulate additional metrics (in real implementation, these would come from backend)
+            document.getElementById('corruption-fixes').textContent = Math.floor(Math.random() * 10);
+            document.getElementById('threats-neutralized').textContent = Math.floor(Math.random() * 5);
+            document.getElementById('avg-quality-score').textContent = (85 + Math.random() * 10).toFixed(1) + '%';
+            document.getElementById('missing-fields').textContent = Math.floor(Math.random() * 15);
+            document.getElementById('format-fixes').textContent = Math.floor(Math.random() * 8);
+            document.getElementById('encoding-fixes').textContent = Math.floor(Math.random() * 3);
+        }
+    </script>
+</body>
+</html>

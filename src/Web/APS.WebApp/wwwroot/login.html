@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - HealthShield</title>
+    <meta name="description" content="Acesse o Sistema HealthShield - Plataforma de Gestão Hospitalar">
+    <meta name="keywords" content="login, sistema hospitalar, HealthShield, APS, dashboard médico">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+    <!-- Flecha minimalista -->
+    <a href="index.html" class="back-button" data-aos="fade-right" data-aos-duration="800" title="Voltar ao Início">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <!-- Container principal -->
+    <div class="login-container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-10 col-xl-8">
+                <div class="login-card" data-aos="fade-up" data-aos-duration="1000">
+                    <div class="row g-0">
+                        <!-- Lado esquerdo - Informações -->
+                        <div class="col-lg-6 login-info-side">
+                            <div class="login-info">
+                                <div class="text-center mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
+                                    <i class="fas fa-hospital-alt login-logo"></i>
+                                    <h3 class="text-white mt-3">HealthShield</h3>
+                                    <p class="text-white-75">Plataforma de Gestão Hospitalar</p>
+                                </div>
+                                
+                                <div class="login-features">
+                                    <div class="feature-item-login" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <div>
+                                            <h6>Acesso Seguro</h6>
+                                            <small>Seus dados protegidos com criptografia de ponta</small>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item-login" data-aos="fade-right" data-aos-duration="800" data-aos-delay="400">
+                                        <i class="fas fa-clock"></i>
+                                        <div>
+                                            <h6>Disponível 24/7</h6>
+                                            <small>Acesse a qualquer hora, de qualquer lugar</small>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item-login" data-aos="fade-right" data-aos-duration="800" data-aos-delay="500">
+                                        <i class="fas fa-user-md"></i>
+                                        <div>
+                                            <h6>Para Profissionais</h6>
+                                            <small>Interface intuitiva para profissionais de saúde</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lado direito - Formulário -->
+                        <div class="col-lg-6 login-form-side">
+                            <div class="login-form-container">
+                                <div class="text-center mb-4" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+                                    <h4 class="fw-bold">Bem-vindo de volta!</h4>
+                                    <p class="text-muted">Entre com suas credenciais para acessar o HealthShield</p>
+                                </div>
+
+                                <!-- Alertas -->
+                                <div id="login-alerts"></div>
+
+                                <!-- Formulário de Login -->
+                                <form id="login-form" class="needs-validation" novalidate data-aos="fade-left" data-aos-duration="800" data-aos-delay="300">
+                                    <!-- Email/CRM -->
+                                    <div class="mb-4">
+                                        <label for="email" class="form-label">
+                                            <i class="fas fa-user me-2"></i>Email ou CRM
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            class="form-control form-control-lg" 
+                                            id="email" 
+                                            name="email"
+                                            placeholder="Seu email ou número do CRM"
+                                            required
+                                            autocomplete="username"
+                                        >
+                                        <div class="invalid-feedback">
+                                            Por favor, insira seu email ou CRM.
+                                        </div>
+                                    </div>
+
+                                    <!-- Senha -->
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label">
+                                            <i class="fas fa-lock me-2"></i>Senha
+                                        </label>
+                                        <div class="password-input-group">
+                                            <input 
+                                                type="password" 
+                                                class="form-control form-control-lg" 
+                                                id="password" 
+                                                name="password"
+                                                placeholder="Sua senha"
+                                                required
+                                                autocomplete="current-password"
+                                                minlength="6"
+                                            >
+                                            <button type="button" class="password-toggle" id="password-toggle">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <div class="invalid-feedback">
+                                                A senha deve ter pelo menos 6 caracteres.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lembrar-me e Esqueci a senha -->
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
+                                            <label class="form-check-label" for="remember-me">
+                                                Lembrar-me
+                                            </label>
+                                        </div>
+                                        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#forgot-password-modal">
+                                            Esqueci minha senha
+                                        </a>
+                                    </div>
+
+                                    <!-- Botão de Login -->
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-4" id="login-btn">
+                                        <span class="btn-text">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Entrar  
+                                        </span>
+                                        <span class="btn-loading d-none">
+                                            <i class="fas fa-spinner fa-spin me-2"></i>Entrando...
+                                        </span>
+                                    </button>
+
+                                    <!-- Login rápido para demo -->
+                                    <div class="text-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="400">
+                                        <small class="text-muted">Para demonstração:</small><br>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="demo-login">
+                                            <i class="fas fa-play me-1"></i>Login Demo
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <!-- Informações de suporte -->
+                                <div class="login-support mt-4 pt-4 border-top" data-aos="fade-left" data-aos-duration="800" data-aos-delay="500">
+                                    <div class="text-center">
+                                        <small class="text-muted">Precisa de ajuda?</small><br>
+                                        <a href="#" class="text-decoration-none small">
+                                            <i class="fas fa-phone me-1"></i>(11) 9999-9999
+                                        </a>
+                                        <span class="text-muted mx-2">|</span>
+                                        <a href="#" class="text-decoration-none small">
+                                            <i class="fas fa-envelope me-1"></i>suporte@healthshield.com.br
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Esqueci a Senha -->
+    <div class="modal fade" id="forgot-password-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title">Recuperar Senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">Digite seu email para receber as instruções de recuperação de senha.</p>
+                    <form id="forgot-password-form">
+                        <div class="mb-3">
+                            <label for="forgot-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="forgot-email" placeholder="seu.email@exemplo.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Instruções
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="js/login.js"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>

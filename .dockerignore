@@ -1,0 +1,109 @@
+# ===== APS Healthcare Platform - Docker Ignore =====
+
+# ===== .NET BUILD ARTIFACTS =====
+**/bin/
+**/obj/
+**/*.dll
+**/*.exe
+**/*.pdb
+**/*.user
+**/*.aps
+**/*.pch
+**/*.vspscc
+**/*.vssscc
+**/bin
+**/obj
+**/out
+
+# ===== VISUAL STUDIO =====
+.vs/
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+*.userprefs
+*.pidb
+*.booproj
+*.csproj.user
+*.vbproj.user
+
+# ===== LOGS =====
+logs/
+*.log
+*.log.*
+
+# ===== NODE MODULES =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== DATABASES =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== TEMPORARY FILES =====
+uploads/
+temp/
+tmp/
+*.tmp
+*.temp
+
+# ===== GIT =====
+.git/
+.gitignore
+README.md
+CHANGELOG.md
+
+# ===== DOCKER =====
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# ===== ENVIRONMENT =====
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# ===== BACKUP FILES =====
+*.backup
+*.bak
+*.swp
+*~
+
+# ===== OS GENERATED =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== COVERAGE REPORTS =====
+coverage/
+*.cover
+.coverage
+.coverage.*
+
+# ===== PACKAGE MANAGERS =====
+packages/
+!packages/build/
+*.nupkg
+*.snupkg
+
+# ===== SPECIFIC TO THIS PROJECT =====
+# Manter apenas os arquivos web necessários
+!src/Web/APS.WebApp/wwwroot/**
+
+# Excluir outros diretórios não necessários para o build web
+src/Servicos/
+src/Gateway/
+src/Frontend/APS.Dashboard/
+tests/
+docs/
+scripts/
+!nginx.conf

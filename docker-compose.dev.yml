@@ -1,0 +1,120 @@
+# Docker Compose para desenvolvimento - apenas infraestrutura
+version: '3.8'
+
+services:
+  # Base de dados PostgreSQL
+  postgresql:
+    image: postgres:15-alpine
+    container_name: aps-postgresql-dev
+    environment:
+      - POSTGRES_DB=aps_saude
+      - POSTGRES_USER=aps
+      - POSTGRES_PASSWORD=aps123
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=pt_BR.UTF-8 --lc-ctype=pt_BR.UTF-8
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aps -d aps_saude"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aps-network-dev
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: aps-redis-dev
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass aps123
+    volumes:
+      - redis_data_dev:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aps-network-dev
+
+  # Message Broker RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: aps-rabbitmq-dev
+    environment:
+      - RABBITMQ_DEFAULT_USER=aps
+      - RABBITMQ_DEFAULT_PASS=aps123
+      - RABBITMQ_DEFAULT_VHOST=aps_vhost
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data_dev:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aps-network-dev
+
+  # Seq para logs (opcional para desenvolvimento)
+  seq:
+    image: datalust/seq:latest
+    container_name: aps-seq-dev
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    volumes:
+      - seq_data_dev:/data
+    networks:
+      - aps-network-dev
+
+  # ===== FRONTEND WEB APPLICATION (DEV MODE) =====
+  aps-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aps-healthcare-web-dev
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      # Volume para desenvolvimento - hot reload
+      - ./src/Web/APS.WebApp/wwwroot:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+    environment:
+      - NGINX_HOST=0.0.0.0
+      - NGINX_PORT=80
+      - TZ=America/Sao_Paulo
+      - NODE_ENV=development
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - aps-network-dev
+
+volumes:
+  postgres_data_dev:
+    driver: local
+  redis_data_dev:
+    driver: local
+  rabbitmq_data_dev:
+    driver: local
+  seq_data_dev:
+    driver: local
+
+networks:
+  aps-network-dev:
+    driver: bridge
+    name: aps-network-dev

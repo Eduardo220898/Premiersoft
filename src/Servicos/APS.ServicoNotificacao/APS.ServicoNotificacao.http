@@ -1,0 +1,6 @@
+@APS.ServicoNotificacao_HostAddress = http://localhost:5217
+
+GET {{APS.ServicoNotificacao_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

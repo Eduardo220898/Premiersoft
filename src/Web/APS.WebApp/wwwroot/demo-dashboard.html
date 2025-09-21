@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APS Healthcare - Demo Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a3a68 0%, #0d1f3a 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-card.clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .stats-card.clickable:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border-left-color: #0056b3;
+        }
+
+        .stats-card.clickable:active {
+            transform: translateY(-1px);
+        }
+
+        .data-list-modal .modal-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .data-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-item strong {
+            color: #007bff;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .upload-zone {
+            background: white;
+            border: 3px dashed #007bff;
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover, .upload-zone.drag-over {
+            background-color: #f8f9ff;
+            border-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+
+        .format-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .format-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .format-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            color: white;
+        }
+
+        .format-icon.medicos { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .format-icon.hospitais { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+        .format-icon.municipios { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .format-icon.estados { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
+        .format-icon.pacientes { background: linear-gradient(135deg, #F44336, #D32F2F); }
+
+        .processing-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            height: 300px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .result-card.error {
+            border-left-color: #dc3545;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-hospital-alt me-3"></i>APS Healthcare</h1>
+                    <p class="mb-0">Sistema de Processamento de Dados de Saúde - Demonstração</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-light" onclick="clearAll()">
+                        <i class="fas fa-trash me-2"></i>Limpar Tudo
+                    </button>
+                    <button class="btn btn-outline-light ms-2" onclick="loadSampleData()">
+                        <i class="fas fa-database me-2"></i>Dados Exemplo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <div class="stats-card text-center clickable" onclick="showDataList('hospitais')" title="Clique para ver a lista de hospitais">
+                    <div class="stats-number" id="total-hospitals">0</div>
+                    <div class="text-muted">Hospitais</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="stats-card text-center clickable" onclick="showDataList('medicos')" title="Clique para ver a lista de médicos">
+                    <div class="stats-number" id="total-doctors">0</div>
+                    <div class="text-muted">Médicos</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="stats-card text-center clickable" onclick="showDataList('municipios')" title="Clique para ver a lista de municípios">
+                    <div class="stats-number" id="total-municipalities">0</div>
+                    <div class="text-muted">Municípios</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="stats-card text-center clickable" onclick="showDataList('estados')" title="Clique para ver a lista de estados">
+                    <div class="stats-number" id="total-states">0</div>
+                    <div class="text-muted">Estados</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="stats-card text-center clickable" onclick="showDataList('pacientes')" title="Clique para ver a lista de pacientes">
+                    <div class="stats-number" id="total-patients">0</div>
+                    <div class="text-muted">Pacientes</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="stats-card text-center clickable" onclick="showDataList('arquivos')" title="Clique para ver a lista de arquivos processados">
+                    <div class="stats-number" id="processed-files">0</div>
+                    <div class="text-muted">Arquivos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="upload-zone" id="upload-zone">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h4>Arraste arquivos de dados de saúde aqui</h4>
+                    <p class="text-muted mb-3">ou clique para selecionar</p>
+                    <button class="btn btn-primary btn-lg" onclick="document.getElementById('file-input').click()">
+                        <i class="fas fa-folder-open me-2"></i>Selecionar Arquivos
+                    </button>
+                    <input type="file" id="file-input" multiple accept=".csv,.xml,.json,.txt" style="display: none;">
+                    <div class="mt-3">
+                        <small class="text-muted">Suporte: CSV, XML, JSON | Tipos: médicos, hospitais, municípios, estados, pacientes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mb-3">Tipos de Dados Suportados</h5>
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <div class="format-card">
+                            <div class="format-icon medicos"><i class="fas fa-user-md"></i></div>
+                            <small><strong>Médicos</strong><br>medicos.csv</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="format-card">
+                            <div class="format-icon hospitais"><i class="fas fa-hospital"></i></div>
+                            <small><strong>Hospitais</strong><br>hospitais.csv</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="format-card">
+                            <div class="format-icon municipios"><i class="fas fa-map-marker-alt"></i></div>
+                            <small><strong>Municípios</strong><br>municipios.csv</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="format-card">
+                            <div class="format-icon estados"><i class="fas fa-flag"></i></div>
+                            <small><strong>Estados</strong><br>estados.csv</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <div class="format-card">
+                            <div class="format-icon pacientes"><i class="fas fa-users"></i></div>
+                            <small><strong>Pacientes</strong><br>pacientes.xml</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Results -->
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="mb-3"><i class="fas fa-list-alt me-2"></i>Resultados do Processamento</h5>
+                <div id="processing-results">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Nenhum arquivo processado ainda. Faça upload de arquivos para ver os resultados.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-3"><i class="fas fa-terminal me-2"></i>Log do Sistema</h5>
+                <div class="processing-log" id="system-log">
+                    <div>[SISTEMA] APS Healthcare Demo Dashboard iniciado</div>
+                    <div>[SISTEMA] Aguardando upload de arquivos...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Processando Arquivo</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div id="current-file">arquivo.csv</div>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div id="progress-message">Iniciando processamento...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data List Modal -->
+    <div class="modal fade data-list-modal" id="dataListModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataListModalTitle">Lista de Dados</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="dataListModalBody">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Carregando dados...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-muted small" id="dataListModalFooter">Total de registros: 0</div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/file-normalizer.js"></script>
+    <script src="js/file-validation-service.js"></script>
+    <script src="js/api-mock.js"></script>
+
+    <script>
+        // Global variables
+        let processedDataStats = {
+            hospitals: 0,
+            doctors: 0,
+            municipalities: 0,
+            states: 0,
+            patients: 0,
+            processedFiles: 0
+        };
+
+        // Store processed data for display in modals
+        let processedData = {
+            hospitais: [],
+            medicos: [],
+            municipios: [],
+            estados: [],
+            pacientes: [],
+            arquivos: []
+        };
+
+        let validationService = null;
+        let progressModal = null;
+        let dataListModal = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🏥 Inicializando APS Healthcare Demo Dashboard...');
+            
+            // Check if required elements exist
+            const fileInput = document.getElementById('file-input');
+            const uploadZone = document.getElementById('upload-zone');
+            const progressModalElement = document.getElementById('progressModal');
+            
+            if (!fileInput) {
+                log('❌ Elemento file-input não encontrado no DOM!');
+                return;
+            }
+            if (!uploadZone) {
+                log('❌ Elemento upload-zone não encontrado no DOM!');
+                return;
+            }
+            if (!progressModalElement) {
+                log('❌ Elemento progressModal não encontrado no DOM!');
+                return;
+            }
+            
+            // Wait for scripts to load
+            setTimeout(() => {
+                try {
+                    initializeServices();
+                    setupFileUpload();
+                    
+                    // Initialize progress modal
+                    progressModal = new bootstrap.Modal(progressModalElement);
+                    log('📊 Modal de progresso inicializado');
+                    
+                    // Initialize data list modal
+                    const dataListModalElement = document.getElementById('dataListModal');
+                    if (dataListModalElement) {
+                        dataListModal = new bootstrap.Modal(dataListModalElement);
+                        log('📋 Modal de lista de dados inicializado');
+                    }
+                    
+                    log('✅ Dashboard inicializado e pronto para uso');
+                } catch (error) {
+                    log(`❌ Erro durante inicialização: ${error.message}`);
+                    console.error('Initialization error:', error);
+                }
+            }, 500);
+        });
+
+        function initializeServices() {
+            // Healthcare API is already available globally from api-mock.js
+            if (window.healthcareAPI) {
+                log('✅ Healthcare API carregada com sucesso');
+            } else if (window.APSHealthcareAPI) {
+                log('✅ Healthcare API class disponível');
+            } else {
+                log('❌ Healthcare API não encontrada - usando processamento direto');
+            }
+
+            // Initialize validation service
+            if (window.FileValidationService) {
+                validationService = new window.FileValidationService();
+                log('✅ Validation service carregado');
+            } else {
+                log('❌ Validation service não encontrado');
+            }
+        }
+
+        function setupFileUpload() {
+            const fileInput = document.getElementById('file-input');
+            const uploadZone = document.getElementById('upload-zone');
+
+            if (!fileInput) {
+                log('❌ Elemento file-input não encontrado!');
+                return;
+            }
+            if (!uploadZone) {
+                log('❌ Elemento upload-zone não encontrado!');
+                return;
+            }
+
+            log('📁 Configurando eventos de upload...');
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                log(`📂 File input mudou - ${e.target.files.length} arquivo(s) selecionado(s)`);
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    log(`📂 Processando arquivos: ${files.map(f => f.name).join(', ')}`);
+                    processFiles(files);
+                }
+                // Clear the input
+                e.target.value = '';
+            });
+
+            // Drag and drop
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('drag-over');
+                log('⬇️ Arquivo sendo arrastado sobre a zona de upload');
+            });
+
+            uploadZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('drag-over');
+                log('⬅️ Arquivo saiu da zona de upload');
+            });
+
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('drag-over');
+                log(`📥 Arquivo solto na zona de upload - ${e.dataTransfer.files.length} arquivo(s)`);
+                const files = Array.from(e.dataTransfer.files);
+                if (files.length > 0) {
+                    log(`📥 Processando arquivos dropados: ${files.map(f => f.name).join(', ')}`);
+                    processFiles(files);
+                } else {
+                    log('❌ Nenhum arquivo foi dropado');
+                }
+            });
+
+            // Click to upload (but not on the button)
+            uploadZone.addEventListener('click', (e) => {
+                log('🖱️ Clique na zona de upload detectado');
+                if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                    log('🖱️ Abrindo seletor de arquivos...');
+                    fileInput.click();
+                } else {
+                    log('🖱️ Clique foi em um botão, ignorando');
+                }
+            });
+
+            log('📁 Sistema de upload configurado com sucesso');
+        }
+
+        async function processFiles(files) {
+            try {
+                log(`📁 Processando ${files.length} arquivo(s)...`);
+                console.log('ProcessFiles called with:', files);
+
+                for (let file of files) {
+                    log(`🔄 Iniciando arquivo: ${file.name} (${file.size} bytes, tipo: ${file.type})`);
+                    await processFile(file);
+                }
+
+                log('✅ Processamento de todos os arquivos concluído');
+            } catch (error) {
+                log(`❌ Erro no processamento de arquivos: ${error.message}`);
+                console.error('Error in processFiles:', error);
+            }
+        }
+
+        async function processFile(file) {
+            log(`🔄 Iniciando processamento: ${file.name}`);
+            
+            try {
+                // Check if modal elements exist
+                const currentFileElement = document.getElementById('current-file');
+                const progressMessageElement = document.getElementById('progress-message');
+                
+                if (!currentFileElement || !progressMessageElement) {
+                    log('❌ Elementos do modal de progresso não encontrados');
+                    throw new Error('Modal de progresso não disponível');
+                }
+
+                // Show progress modal
+                currentFileElement.textContent = file.name;
+                progressMessageElement.textContent = 'Iniciando processamento...';
+                updateProgress(0);
+                
+                if (progressModal) {
+                    progressModal.show();
+                    log('📊 Modal de progresso exibido');
+                } else {
+                    log('❌ progressModal não inicializado');
+                }
+
+                let result;
+
+                if (window.healthcareAPI && window.healthcareAPI.processHealthcareFile) {
+                    // Use healthcare API
+                    log('🏥 Usando Healthcare API para processar arquivo');
+                    result = await window.healthcareAPI.processHealthcareFile(file, (progress, message) => {
+                        updateProgress(progress);
+                        progressMessageElement.textContent = message;
+                        log(`📊 ${file.name}: ${progress}% - ${message}`);
+                    });
+                } else {
+                    // Fallback to direct processing
+                    log('📄 Usando processamento direto (fallback)');
+                    result = await processFileDirectly(file);
+                }
+
+                // Hide progress modal
+                if (progressModal) {
+                    progressModal.hide();
+                    log('📊 Modal de progresso oculto');
+                }
+
+                if (result && result.success) {
+                    log(`✅ ${file.name} processado com sucesso!`);
+                    log(`📊 Resultado: ${result.validRecords} registros válidos, tipo: ${result.dataType}`);
+                    updateStats(result);
+                    showResult(result, true);
+                } else {
+                    const errorMsg = result ? result.error : 'Resultado inválido';
+                    log(`❌ Erro ao processar ${file.name}: ${errorMsg}`);
+                    showResult(result || { fileName: file.name, error: errorMsg }, false);
+                }
+
+            } catch (error) {
+                if (progressModal) {
+                    progressModal.hide();
+                }
+                log(`❌ Erro durante processamento de ${file.name}: ${error.message}`);
+                console.error('Error in processFile:', error);
+                showResult({ fileName: file.name, error: error.message }, false);
+            }
+        }
+
+        async function processFileDirectly(file) {
+            updateProgress(10);
+            document.getElementById('progress-message').textContent = 'Lendo arquivo...';
+
+            // Read file content
+            const content = await readFileContent(file);
+            
+            updateProgress(30);
+            document.getElementById('progress-message').textContent = 'Detectando tipo de dados...';
+
+            // Detect data type from filename
+            const dataType = detectDataTypeFromFilename(file.name);
+            
+            updateProgress(50);
+            document.getElementById('progress-message').textContent = 'Validando dados...';
+
+            // Simple CSV processing
+            const lines = content.split('\n').filter(line => line.trim());
+            const headers = lines[0] ? lines[0].split(',').map(h => h.trim()) : [];
+            const records = lines.slice(1).map(line => {
+                const values = line.split(',');
+                const record = {};
+                headers.forEach((header, index) => {
+                    record[header] = values[index] ? values[index].trim() : '';
+                });
+                return record;
+            });
+
+            updateProgress(80);
+            document.getElementById('progress-message').textContent = 'Finalizando processamento...';
+
+            // Count valid records (basic validation)
+            const validRecords = records.filter(record => {
+                return Object.values(record).some(value => value.trim() !== '');
+            }).length;
+
+            updateProgress(100);
+
+            return {
+                success: true,
+                fileName: file.name,
+                dataType: dataType,
+                recordsProcessed: records.length,
+                validRecords: validRecords,
+                invalidRecords: records.length - validRecords,
+                processedAt: new Date().toISOString()
+            };
+        }
+
+        function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(new Error('Erro ao ler arquivo'));
+                reader.readAsText(file, 'UTF-8');
+            });
+        }
+
+        function detectDataTypeFromFilename(filename) {
+            const lowerName = filename.toLowerCase();
+            
+            if (lowerName.includes('medico')) return 'medicos';
+            if (lowerName.includes('hospital') || lowerName.includes('hospitais')) return 'hospitais';
+            if (lowerName.includes('municipio') || lowerName.includes('municipios')) return 'municipios';
+            if (lowerName.includes('estado') || lowerName.includes('estados')) return 'estados';
+            if (lowerName.includes('paciente') || lowerName.includes('pacientes')) return 'pacientes';
+            
+            return 'generic';
+        }
+
+        function updateProgress(progress) {
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.setAttribute('aria-valuenow', progress);
+        }
+
+        function updateStats(result) {
+            processedDataStats.processedFiles++;
+            
+            switch (result.dataType) {
+                case 'medicos':
+                    processedDataStats.doctors += result.validRecords || 0;
+                    break;
+                case 'hospitais':
+                    processedDataStats.hospitals += result.validRecords || 0;
+                    break;
+                case 'municipios':
+                    processedDataStats.municipalities += result.validRecords || 0;
+                    break;
+                case 'estados':
+                    processedDataStats.states += result.validRecords || 0;
+                    break;
+                case 'pacientes':
+                    processedDataStats.patients += result.validRecords || 0;
+                    break;
+            }
+
+            // Update UI
+            document.getElementById('total-hospitals').textContent = processedDataStats.hospitals.toLocaleString();
+            document.getElementById('total-doctors').textContent = processedDataStats.doctors.toLocaleString();
+            document.getElementById('total-municipalities').textContent = processedDataStats.municipalities.toLocaleString();
+            document.getElementById('total-states').textContent = processedDataStats.states.toLocaleString();
+            document.getElementById('total-patients').textContent = processedDataStats.patients.toLocaleString();
+            document.getElementById('processed-files').textContent = processedDataStats.processedFiles.toLocaleString();
+
+            // Save to localStorage
+            localStorage.setItem('healthcare_demo_stats', JSON.stringify(processedDataStats));
+        }
+
+        function showResult(result, success) {
+            const resultsDiv = document.getElementById('processing-results');
+            
+            // Remove info message on first result
+            if (processedDataStats.processedFiles === 1) {
+                resultsDiv.innerHTML = '';
+            }
+
+            const resultCard = document.createElement('div');
+            resultCard.className = `result-card fade-in ${success ? '' : 'error'}`;
+            
+            if (success) {
+                resultCard.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                ${result.fileName}
+                            </h6>
+                            <p class="mb-1">
+                                <span class="badge bg-primary">${result.dataType}</span>
+                                <span class="ms-2">${result.recordsProcessed || 0} registros processados</span>
+                            </p>
+                            <small class="text-muted">
+                                ✅ ${result.validRecords || 0} válidos | 
+                                ❌ ${result.invalidRecords || 0} inválidos
+                            </small>
+                        </div>
+                        <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+                    </div>
+                `;
+            } else {
+                resultCard.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">
+                                <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                                ${result.fileName}
+                            </h6>
+                            <p class="mb-0 text-danger">${result.error}</p>
+                        </div>
+                        <small class="text-muted">${new Date().toLocaleTimeString()}</small>
+                    </div>
+                `;
+            }
+
+            resultsDiv.insertBefore(resultCard, resultsDiv.firstChild);
+        }
+
+        function log(message) {
+            const logDiv = document.getElementById('system-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[APS Healthcare] ${message}`);
+        }
+
+        function clearAll() {
+            processedDataStats = {
+                hospitals: 0,
+                doctors: 0,
+                municipalities: 0,
+                states: 0,
+                patients: 0,
+                processedFiles: 0
+            };
+            
+            updateStats({ dataType: 'clear', validRecords: 0 });
+            
+            document.getElementById('processing-results').innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Dados limpos. Faça upload de arquivos para ver os resultados.
+                </div>
+            `;
+            
+            document.getElementById('system-log').innerHTML = `
+                <div>[SISTEMA] Dados limpos - Dashboard reiniciado</div>
+                <div>[SISTEMA] Aguardando upload de arquivos...</div>
+            `;
+            
+            localStorage.removeItem('healthcare_demo_stats');
+            log('🗑️ Todos os dados foram limpos');
+        }
+
+        function loadSampleData() {
+            log('📊 Carregando dados de exemplo...');
+            
+            // Simulate loading Tabelas data
+            processedDataStats = {
+                hospitals: 6845,
+                doctors: 280002,
+                municipalities: 5571,
+                states: 27,
+                patients: 0,
+                processedFiles: 4
+            };
+            
+            updateStats({ dataType: 'sample', validRecords: 0 });
+            
+            // Add sample results
+            const sampleResults = [
+                { fileName: 'estados.csv', dataType: 'estados', recordsProcessed: 27, validRecords: 27, invalidRecords: 0 },
+                { fileName: 'municipios.csv', dataType: 'municipios', recordsProcessed: 5571, validRecords: 5571, invalidRecords: 0 },
+                { fileName: 'hospitais.csv', dataType: 'hospitais', recordsProcessed: 6845, validRecords: 6845, invalidRecords: 0 },
+                { fileName: 'medicos.csv', dataType: 'medicos', recordsProcessed: 280002, validRecords: 280002, invalidRecords: 0 }
+            ];
+            
+            document.getElementById('processing-results').innerHTML = '';
+            sampleResults.forEach(result => showResult(result, true));
+            
+            log('✅ Dados de exemplo carregados (baseados no diretório Tabelas)');
+        }
+
+        function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(new Error('Erro ao ler arquivo'));
+                reader.readAsText(file, 'UTF-8');
+            });
+        }
+
+        function detectDataTypeFromFilename(filename) {
+            const lowerName = filename.toLowerCase();
+            
+            if (lowerName.includes('medico')) return 'medicos';
+            if (lowerName.includes('hospital') || lowerName.includes('hospitais')) return 'hospitais';
+            if (lowerName.includes('municipio') || lowerName.includes('municipios')) return 'municipios';
+            if (lowerName.includes('estado') || lowerName.includes('estados')) return 'estados';
+            if (lowerName.includes('paciente') || lowerName.includes('pacientes')) return 'pacientes';
+            
+            return 'generic';
+        }
+
+        // Load saved stats on page load
+        window.addEventListener('load', () => {
+            const savedStats = localStorage.getItem('healthcare_demo_stats');
+            if (savedStats) {
+                processedDataStats = JSON.parse(savedStats);
+                updateStats({ dataType: 'restore', validRecords: 0 });
+                log('💾 Estatísticas restauradas do armazenamento local');
+            }
+        });
+    </script>
+</body>
+</html>
